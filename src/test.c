@@ -46,6 +46,48 @@ int main () {
   printf ("target : %2x | carry : %2x\n", target, carry);
   cpu_ops_8b_rrc (&target, &zero, &negative, &half, &carry);
   printf ("target : %2x | carry : %2x\n", target, carry);
+
+  // 8bit loading test
+  cpu_ops_8b_ld(&target, 0x0);
+  assert(target == 0);
+  cpu_ops_8b_ld(&target, 0xFF);
+  assert(target == 0xFF);
+  cpu_ops_8b_ld(&target, (BYTE)0x1FF);
+  assert(target == 0xFF);
+  cpu_ops_8b_ld(&target, 0x1F);
+  assert(target == 0x1F);
   
+  // 8bit addition test
+  cpu_ops_8b_ld(&target, 0x0);
+  cpu_ops_8b_add(&target, 0x0E, &zero, &negative, &half, &carry);
+  printf("cpu_ops_8b_add > target: %2x, zero: %2x | negative: %2x | half: %2x | carry: %2x\n", target, zero, negative, half, carry);
+  assert(zero == 0x0);
+  assert(negative == 0x0);
+  assert(half == 0x0);
+  assert(carry == 0x0);
+  
+  cpu_ops_8b_add(&target, 0x02, &zero, &negative, &half, &carry);
+  printf("cpu_ops_8b_add > target: %2x, zero: %2x | negative: %2x | half: %2x | carry: %2x\n", target, zero, negative, half, carry);
+  assert(zero == 0x0);
+  assert(negative == 0x0);
+  assert(half == 0x1);
+  assert(carry == 0x0);
+  
+  cpu_ops_8b_ld(&target, 0x10);
+  cpu_ops_8b_add(&target, 0xFF, &zero, &negative, &half, &carry);
+  printf("cpu_ops_8b_add > target: %2x, zero: %2x | negative: %2x | half: %2x | carry: %2x\n", target, zero, negative, half, carry);
+  assert(zero == 0x0);
+  assert(negative == 0x0);
+  assert(half == 0x0);
+  assert(carry == 0x1);
+  
+  cpu_ops_8b_ld(&target, 0x0E);
+  cpu_ops_8b_add(&target, 0xF2, &zero, &negative, &half, &carry);
+  printf("cpu_ops_8b_add > target: %2x, zero: %2x | negative: %2x | half: %2x | carry: %2x\n", target, zero, negative, half, carry);
+  assert(zero == 0x1);
+  assert(negative == 0x0);
+  assert(half == 0x1);
+  assert(carry == 0x1);
+    
   return 0;
 }
